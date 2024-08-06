@@ -1,6 +1,7 @@
 Create a virtual environment in the root of the directory
 open powershell
 Following commands:
+
   python -m venv venv
   
   venv/Scripts/Activate
