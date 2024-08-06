@@ -7,6 +7,7 @@ Following commands:
   venv/Scripts/Activate
   
 If this gives error of wont activate on windows then open a new powershell as admin and run the following command
+
   Set-ExecutionPolicy Unrestricted -Force
   
 Then run the latter commands again
