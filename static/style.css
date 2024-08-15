@@ -1,17 +1,49 @@
-.btn-yellow {
-    background-color: #ffff00;
-    border-color: #ffff00;
-}
-.btn-pink {
-    background-color: #ff69b4;
-    border-color: #ff69b4;
-    color: white;
-}
+
 .card {
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
     padding: 1.25rem;
 }
 
-h2{
+*{
     font-family:"Poppins",sans-serif;
 }
+
+.btn-yellow {
+    background-color: #ffa500; /* Orange */
+    color: white;
+    transition: all 0.3s ease;
+    border-color: #ffa500;
+}
+
+.btn-yellow:hover, .btn-yellow:focus {
+    transform: scale(1.05);
+    background-color: #ff8c00; /* Dark Orange */
+    border-color: #ff8c00;
+    color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-yellow:focus {
+    outline: 2px solid #ffff00; /* Yellow */
+    outline-offset: 2px;
+}
+
+.btn-pink {
+    background-color: #ff69b4;
+    border-color: #ff69b4;
+    color: white;
+    transition: all 0.3s ease;
+}
+.btn-pink:hover, .btn-pink:focus {
+    transform: scale(1.05);
+    background-color:#fc58a8; /* Dark pink */
+    border-color: #fc58a8;
+    color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-pink:focus {
+    outline: 2px solid #ff69b4; /* pink */
+    outline-offset: 2px;
+}
+
