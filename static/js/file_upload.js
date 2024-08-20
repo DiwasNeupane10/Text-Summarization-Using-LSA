@@ -25,6 +25,6 @@ function uploadFile() {
        
     })
     .catch((error) => {
-        alert('File upload failed!'+error);
+        alert('File upload failed!');
     });
 }

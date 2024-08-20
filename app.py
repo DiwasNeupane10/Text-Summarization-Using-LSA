@@ -22,7 +22,7 @@ def upload_file():
     if file.filename == '':
         return jsonify({'error': 'No selected file'}), 400
     
-    if file and allowed_files(file.filename):
+    if file and allowed_files(file):
         filename = secure_filename(file.filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         return jsonify({'message': 'File successfully uploaded'}), 200

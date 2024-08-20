@@ -1,6 +1,16 @@
+import magic
 upload_folder='./uploads'
 
-def allowed_files(filename):
+
+def allowed_files(file):
     allowed_extensions={'txt','pdf','docx'}
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in allowed_extensions
+    allowed_mimetypes={'application/vnd.openxmlformats-officedocument.wordprocessingml.document','application/pdf','text/plain'}
+    if not('.' in file.filename and \
+           file.filename.rsplit('.', 1)[1].lower() in allowed_extensions):
+        return False
+    file_chunks=file.read(1024)
+    file_mime = magic.from_buffer(file_chunks, mime=True)
+    file.seek(0)  # Reset file pointer
+    return file_mime in allowed_mimetypes
+
+
