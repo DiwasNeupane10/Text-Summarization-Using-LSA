@@ -13,32 +13,25 @@
 <body>
     <div class="container mt-4">
         <form method="post" id="myform" enctype="multipart/form-data">
-        <h2 class="mb-3 text-center">
-            Summarize my text in 
-            <input type="number" value="5" min="1" style="width: 60px;" class="form-control d-inline-block"> 
-            sentences.
-        </h2>
-        <div class="card">
-            <div class="card-body">
+            <h2 class="mb-3 text-center">
+                Summarize my text in 
+                <input type="number" style="width:60px ;" value="5" min="1" class="form-control d-inline-block"> 
+                sentences.
+            </h2>
+            <div class="card">
+                <div class="card-body">
                     <div class="mb-3">
                         <textarea class="form-control" rows="6" placeholder="Our Text Summarizer summarizes text to save you time. Paste an article, text or essay in this box and hit summarize. You can also summarize PDF and docx documents by uploading a file"></textarea>
                     </div>
-                    <div class="row g-2">
-                        <div class="col-sm-8 col-md-9 mb-2">
-                            <div class="input-group">
-                                <input type="file" class="form-control" id="inputGroupFile02">
-                                <button class="btn btn-outline-secondary btn-yellow" type="button" id="inputGroupFileAddon04" onclick="uploadFile()">Upload</button>
-                            </div>
-                        </div>
-                        <div class="col-sm-4 col-md-3 mb-2">
-                            <button class="btn btn-pink w-100 h-100" type="submit">SUMMARIZE</button>
-                        </div>
+                    <div class="d-flex flex-column flex-md-row justify-content-center gap-2">
+                        <a class="btn btn-outline-secondary btn-yellow" href="{{ url_for('upload_file')}}">For File Upload</a>
+                        <button class="btn btn-pink" type="submit" name="summarize" value="summarize">SUMMARIZE</button>
                     </div>
-                </form>
+                </div>
             </div>
-        </div>
+        </form>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="./../static/js/file_upload.js"></script>
+
 </body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </html>

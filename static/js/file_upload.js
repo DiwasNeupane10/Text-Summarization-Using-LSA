@@ -9,7 +9,7 @@ function uploadFile() {
     
     */
 
-    fetch('/', {
+    fetch('/upload', {
         method: 'POST',
         body: formData
     })
