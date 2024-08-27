@@ -2,8 +2,8 @@ import magic
 upload_folder='./uploads'
 
 def allowed_files(file):
-    allowed_extensions={'txt','pdf','docx'}
-    allowed_mimetypes={'application/vnd.openxmlformats-officedocument.wordprocessingml.document','application/pdf','text/plain'}
+    allowed_extensions=['txt','pdf','docx']
+    allowed_mimetypes=['application/vnd.openxmlformats-officedocument.wordprocessingml.document','application/pdf','text/plain']
     if not('.' in file.filename and \
            file.filename.rsplit('.', 1)[1].lower() in allowed_extensions):
         return False

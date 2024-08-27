@@ -14,7 +14,7 @@ def index():
 
 
 @app.route("/upload", methods=['POST','GET'])
-def upload_file():
+def handle_files():
     if request.method=='POST':
         if 'file' not in request.files:
             return jsonify({'error': 'No file part in the request'})
@@ -28,13 +28,15 @@ def upload_file():
         #     return jsonify({'message':allowed_files(file)})  
         
         elif file and allowed_files(file):
-            try:
-                filename = secure_filename(file.filename)
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                extract_text(file)
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            # try:
+            if extract_text(file):
                 return jsonify({'message': 'File successfully uploaded and Text is extracted'})
-            except ValueError  as e:
-                return jsonify({'error':'Text Extraction Failed'})
+            else :
+                return jsonify({'message': 'Failure'})
+            # except ValueError  as e:
+            #     return jsonify({'error':str(e)})
                 
         else:
             return jsonify({'error': 'File type not allowed'})
