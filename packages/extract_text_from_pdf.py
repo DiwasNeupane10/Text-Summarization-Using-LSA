@@ -48,8 +48,8 @@ def extract_text(file):
                 for para in doc.paragraphs:
                     fullText.append(para.text)
                 text.append('\n'.join(fullText))
-
-                filename=secure_filename(file.filename.rsplit('.',1)[0])+'.txt'
+                current_date_time=get_date_time()
+                filename=secure_filename(file.filename.rsplit('.',1)[0]+'_'+current_date_time)+'.txt'
                 path=os.path.join('./extraction',filename)
                 with open(path,'w',encoding='utf-8') as f:
                     for line in text:
@@ -79,7 +79,8 @@ def extract_text(file):
                     if  not bool(content):
                         return not flag
                  #for text files if there is content in it then change its directory straight to extracted folder   
-                os.rename(open_path, os.path.join('./extraction', filename))
+                current_date_time=get_date_time()
+                os.rename(open_path, os.path.join('./extraction',filename.rsplit('.',1)[0]+'_'+current_date_time+'.txt'))
                 return flag
             except Exception as e:
                 raise ValueError("Text Extraction Failed") from e
