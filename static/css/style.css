@@ -1,6 +1,6 @@
 
 .card {
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    box-shadow: 0 0.5rem 1rem rgba(255, 99, 71, 0.3) ;
     padding: 1.25rem;
 }
 
@@ -47,3 +47,31 @@
     outline-offset: 2px;
 }
 
+.btn-tomato{
+    background-color:#ff6347;
+    border-color:#ff6347;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.btn-tomato:hover, .btn-tomato:focus {
+    transform: scale(1.05);
+    background-color:#cc4f39; 
+    border-color:#cc4f39;
+    color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-tomato:focus {
+    outline: 2px solid #ff6347; 
+    outline-offset: 2px;
+}
+
+.u-card {
+    box-shadow: 0 0.5rem 1rem rgba(255, 165, 0, 0.3);
+    padding: 1.25rem;
+}
+.s-card{
+    box-shadow: 0 0.5rem 1rem rgba(255, 105, 180, 0.3);
+    padding: 1.25rem;   
+}

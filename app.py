@@ -1,5 +1,5 @@
 import os
-from flask import Flask,render_template,jsonify,request
+from flask import Flask,render_template,jsonify,request,url_for
 from werkzeug.utils import secure_filename
 from packages.allowed_file import allowed_files
 from packages.allowed_file import upload_folder
@@ -8,9 +8,12 @@ from packages.extract_text_from_pdf import extract_text
 app=Flask(__name__)
 app.config['UPLOAD_FOLDER']=upload_folder
 
-@app.route("/")
+@app.route("/",methods=['GET','POST'])
 def index():
-    return render_template('index.html')
+    if request.method=="POST":
+        return url_for('summarization')
+    else:
+        return render_template('index.html')
 
 
 @app.route("/upload", methods=['POST','GET'])
@@ -44,6 +47,13 @@ def handle_files():
     else:
         return render_template('upload.html')
     
+
+
+@app.route('/summary',methods=['GET','POST'])
+def summarization():
+    return render_template('summarization.html')
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)

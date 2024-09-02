@@ -12,20 +12,20 @@
 </head>
 <body>
     <div class="container mt-4">
-        <form method="post" id="myform" enctype="multipart/form-data">
-            <h2 class="mb-3 text-center">
+        <form method="post" id="myform" enctype="multipart/form-data" action="{{url_for('summarization')}}">
+            <h1 class="mb-3 text-center">
                 Summarize my text in 
                 <input type="number" style="width:60px ;" value="5" min="1" class="form-control d-inline-block"> 
                 sentences.
-            </h2>
+            </h1>
             <div class="card">
                 <div class="card-body">
                     <div class="mb-3">
                         <textarea class="form-control" rows="6" placeholder="Our Text Summarizer summarizes text to save you time. Paste an article, text or essay in this box and hit summarize. You can also summarize PDF and docx documents by uploading a file"></textarea>
                     </div>
                     <div class="d-flex flex-column flex-md-row justify-content-center gap-2">
-                        <a class="btn btn-outline-secondary btn-yellow" href="{{ url_for('handle_files')}}">For File Upload</a>
-                        <button class="btn btn-pink" type="submit" name="summarize" value="summarize">SUMMARIZE</button>
+                        <a class="btn btn-outline-secondary btn-yellow mx-3" href="{{ url_for('handle_files')}}">FOR FILE UPLOAD</a>
+                        <button class="btn btn-pink mx-3" type="submit" name="summarize" value="summarize">SUMMARIZE</button>
                     </div>
                 </div>
             </div>
