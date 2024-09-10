@@ -21,7 +21,8 @@
             <div class="card">
                 <div class="card-body">
                     <div class="mb-3">
-                        <textarea class="form-control" rows="6" placeholder="Our Text Summarizer summarizes text to save you time. Paste an article, text or essay in this box and hit summarize. You can also summarize PDF and docx documents by uploading a file"></textarea>
+                        <input type="hidden" name="input_type" value="textarea">
+                        <textarea required class="form-control" rows="6" name="text_area"  placeholder="Our Text Summarizer summarizes text to save you time. Paste an article, text or essay in this box and hit summarize. You can also summarize PDF and docx documents by uploading a file"></textarea>
                     </div>
                     <div class="d-flex flex-column flex-md-row justify-content-center gap-2">
                         <a class="btn btn-outline-secondary btn-yellow mx-3" href="{{ url_for('handle_files')}}">FOR FILE UPLOAD</a>
