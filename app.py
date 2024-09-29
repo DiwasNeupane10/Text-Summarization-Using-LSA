@@ -1,19 +1,17 @@
 import os
-from flask import Flask,render_template,jsonify,request,url_for
+from flask import Flask,render_template,jsonify,request
 from werkzeug.utils import secure_filename
 from packages.allowed_file import allowed_files
 from packages.allowed_file import upload_folder
 from packages.extract_text_from_files import extract_text
 from packages.preprocessing_text import preprocessor
+from packages.calc_TF_IDF import compute_tf_idf
 
 app=Flask(__name__)
 app.config['UPLOAD_FOLDER']=upload_folder
 
 @app.route("/",methods=['GET','POST'])
 def index():
-    if request.method=="POST":
-        return url_for('summarization')
-    else:
         return render_template('index.html')
 
 
@@ -56,10 +54,12 @@ def summarization():
         input_type=request.form['input_type']#get the value of the input
         if input_type=='textarea':
             user_text=request.form['text_area']#get the text from the textarea with name text_area
-            filtered_words=preprocessor(user_text)
-            return render_template('summarization.html',text=filtered_words)
+            preprocessed_sentences=preprocessor(user_text)
+            tf,isf,tf_idf=(compute_tf_idf(preprocessed_sentences))
+            tf,isf,tf_idf=tf.to_html(classes='table table-striped'),isf.to_html(classes='table table-striped',index=False),tf_idf.to_html(classes='table table-striped')
+            return render_template('summarization.html',table1=tf,table2=isf,table3=tf_idf)
     else:
-        filtered_words=[]
+        preprocessed_sentences=[]
         dir=os.listdir('./extraction')#return a list with all the files and folders
         dir.remove('.gitkeep')
         if dir:#if the directory is not empty 
@@ -67,11 +67,13 @@ def summarization():
             if os.path.exists(path):
                 with open(path,'r',encoding='utf-8') as f:
                     file_text=f.read()
-                    filtered_words=preprocessor(file_text)
-        if not filtered_words:
+                    preprocessed_sentences=preprocessor(file_text)
+        if not preprocessed_sentences:
             return render_template('summarization.html',text="Neither file Nor text input has been given .Go back!")
         else:
-            return render_template('summarization.html',text=filtered_words)    
+            tf,isf,tf_idf=compute_tf_idf(preprocessed_sentences)
+            tf,isf,tf_idf=tf.to_html(classes='table table-striped'),isf.to_html(classes='table table-striped',index=False),tf_idf.to_html(classes='table table-striped')
+            return render_template('summarization.html',table1=tf,table2=isf,table3=tf_idf)   
             
     
 

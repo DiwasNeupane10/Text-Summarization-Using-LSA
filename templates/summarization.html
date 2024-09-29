@@ -15,8 +15,20 @@
         <h1 class="mb-3 text-center">Summary</h1>
         <div class="row justify-content-center">
             <div class="col-12 col-md-8 col-lg-6 text-center">
-                <div class="gen_summary  border border-1 s-card" style="padding: 10px;word-wrap: break-word;">
-                    {{text}}
+                <!-- <div class="gen_summary  border border-1 s-card" style="padding: 10px;word-wrap: break-word;">
+                    {{table2}} 
+                </div> -->
+                <div class="table-responsive border">
+                    <caption>TF</caption>
+                    {{table1|safe}}
+                </div>
+                <div class="table-responsive border">
+                    <caption>IDF</caption>
+                    {{table2|safe}}
+                </div>
+                <div class="table-responsive border">
+                    <caption>TF-IDF</caption>
+                    {{table3|safe}}
                 </div>
             </div>
         </div>
