@@ -1,0 +1,11 @@
+import nltk
+import subprocess
+import sys
+
+# Download necessary NLTK data
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('wordnet')
+
+# Install python-magic-bin package
+subprocess.check_call([sys.executable, "-m", "pip", "install", "python-magic-bin", "--force-reinstall"])
