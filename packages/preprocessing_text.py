@@ -23,8 +23,21 @@ def preprocessor_for_sentence(sent):
     return ' '.join(lematized_words)
 
 
+# def preprocessor(text):
+#     tokenized_sentence=sent_tokenize(text)
+#     preprocessed_sentences=[preprocessor_for_sentence(sent) for sent in tokenized_sentence]
+#         # print(preprocessed_sentences)
+#         # print(tokenized_sentence)
+#     return preprocessed_sentences,tokenized_sentence
+
 def preprocessor(text):
     tokenized_sentence=sent_tokenize(text)
-    preprocessed_sentences=[preprocessor_for_sentence(sent) for sent in tokenized_sentence]
-    # print(preprocessed_sentences)
-    return preprocessed_sentences
+    preprocessed_sentences=[]
+    index_map=[]
+    for i,sent in enumerate(tokenized_sentence):
+        preprocessed_sentence=preprocessor_for_sentence(sent)
+        if preprocessed_sentence:
+            preprocessed_sentences.append(preprocessed_sentence)
+            index_map.append(i)
+    # print(index_map)
+    return preprocessed_sentences,tokenized_sentence,index_map

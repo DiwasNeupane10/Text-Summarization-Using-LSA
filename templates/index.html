@@ -15,7 +15,7 @@
         <form method="post" id="myform" enctype="multipart/form-data" action="{{url_for('summarization')}}">
             <h1 class="mb-3 text-center">
                 Summarize my text in 
-                <input type="number" style="width:60px ;" value="5" min="1" class="form-control d-inline-block"> 
+                <input type="number" style="width:60px ;" value="5" min="1" class="form-control d-inline-block" name="length"> 
                 sentences.
             </h1>
             <div class="card">

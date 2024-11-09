@@ -8,7 +8,9 @@ def compute_tf_idf(preprocessed_sentences):
     tf=compute_tf(dict1,dict2)
     isf=compute_isf(no_of_sentences,preprocessed_sentences)
     tf_idf=tf * isf.iloc[0]
-    return tf,isf,tf_idf.fillna(0)
+    # tf_idf = tf.multiply(isf['ISF'], axis=0)
+    # return tf,isf,tf_idf.fillna(0)
+    return tf_idf.fillna(0)
 
 
 #function to calculate the total no of words in each sentence.stored in a dictionary
@@ -19,7 +21,7 @@ def compute_total_words_in_sentence(no_of_sentences,preprocessed_sentences):
     return sentence_total_words_dict
 
 def word_split(sent):
-    words=sent.split()#splits the words of the sentences
+    words=str(sent).split()#splits the words of the sentences
     words=[word.strip() for word in words]#strips of any leading or trailing whitespaces
     return words
 
@@ -66,6 +68,9 @@ def compute_tf(dict1,dict2):
             #TF(t,s)=no of occurancce of the word in that sentence/no of words in that sentence
     term_frequency=pd.DataFrame.from_dict(tf_dict)#create a DataFrame
     term_frequency=term_frequency.fillna(0).T
+    # term_frequency=term_frequency.fillna(0)
+
+
     '''
     fills the NaN vlaues with 0
     we get Nan for word that are not in some sentences .
@@ -91,6 +96,7 @@ def compute_isf(no_of_sentences,preprocessed_sentences):
     inverse_frequency=pd.DataFrame.from_dict(isf_dict,orient='index',columns=['ISF'])#creates a Df from the dictionary and columns with header ISF
     inverse_frequency=inverse_frequency.T.reset_index(drop=True)#drops the header
     inverse_frequency=inverse_frequency.sort_index(axis=1)#sorts the df on the basis of alphabetical order of the keys ie the words
+    # print(inverse_frequency)
     return inverse_frequency
 
 def return_isf(N,St):
