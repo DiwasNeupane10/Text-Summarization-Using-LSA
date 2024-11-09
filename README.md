@@ -8,12 +8,14 @@ The problem we are addressing is the overwhelming amount of text data available,
 
 3.Requirements
 
-The neccesary dependencies are in the Requirements.txt file.
+The neccesary dependencies are in the requirements.txt file.
 
 4.Additional Requirements
 
-After the requirements have been installed then run this command
+Before the requirements have been installed , run these commands:
 
 python -m venv <venv_name>
+
+python -r pip install requirements.txt
 
 python -c "exec(open('additional.txt').read())"
