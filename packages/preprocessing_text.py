@@ -20,7 +20,7 @@ def preprocessor_for_sentence(sent):
         if the word is not in stop_words and removing whitespacces
     '''
     lematized_words=[lematizer.lemmatize(word) for word in filtered_words]
-    return ' '.join(lematized_words)
+    return ' '.join(lematized_words),lematized_words
 
 
 # def preprocessor(text):
@@ -33,11 +33,23 @@ def preprocessor_for_sentence(sent):
 def preprocessor(text):
     tokenized_sentence=sent_tokenize(text)
     preprocessed_sentences=[]
+    tokenized_words=[]
     index_map=[]
+    word_position=0
+    word_index_map=[]
     for i,sent in enumerate(tokenized_sentence):
-        preprocessed_sentence=preprocessor_for_sentence(sent)
+        preprocessed_sentence,list_words=preprocessor_for_sentence(sent)
         if preprocessed_sentence:
             preprocessed_sentences.append(preprocessed_sentence)
             index_map.append(i)
+            # print(list_words)
+            for word in list_words:
+                tokenized_words.append(word)
+                word_index_map.append(word_position)
+                word_position+=1
+    # print(tokenized_words)
+           
+            
+
     # print(index_map)
-    return preprocessed_sentences,tokenized_sentence,index_map
+    return preprocessed_sentences,tokenized_sentence,index_map,tokenized_words,word_index_map

@@ -10,6 +10,7 @@ from packages.svd import calc_svd
 from packages.date_time import get_date_time
 # from packages.sentence_scoring import calc_sentence_score,calc_rank
 from packages.sentence_scoring import cross
+from packages.word_scoring import cross_words
 
 app=Flask(__name__)
 app.config['UPLOAD_FOLDER']=upload_folder
@@ -63,7 +64,7 @@ def summarization():
                 os.remove(os.path.join('./summary',dir))
         if input_type=='textarea':
             user_text=request.form['text_area']#get the text from the textarea with name text_area
-            preprocessed_sentences,tokenized_sentences,index_map=preprocessor(user_text)
+            preprocessed_sentences,tokenized_sentences,index_map,tokenized_words,word_index_map=preprocessor(user_text)
             # print(tokenized_sentences)
             # tf,isf,tf_idf=compute_tf_idf(preprocessed_sentences)
             tf_idf=compute_tf_idf(preprocessed_sentences)
@@ -78,6 +79,7 @@ def summarization():
             # sentence_rank=calc_sentence_score(U,S,tokenized_sentences)
             # calc_rank(sentence_rank,tokenized_sentences,summary_length)
             summary=cross(U,tokenized_sentences,summary_length,index_map)
+            words=cross_words(Vt,tokenized_words,word_index_map)
             current_date=get_date_time()
             path=os.path.join('./summary',f'summary_{current_date}.txt')
             with open(path,'w',encoding='utf-8') as f:
@@ -85,7 +87,7 @@ def summarization():
                     f.write(sent)
                     f.write("\n")
             # print(sentence_rank)
-            return render_template('summarization.html',summary=summary)
+            return render_template('summarization.html',summary=summary,words=words)
             # return render_template('summarization.html',U=U,S=S,Vt=Vt,sh=sh)
             # return render_template('summarization.html',tf_idf_array=tf_idf_array)
         elif input_type=='fileup':
@@ -97,12 +99,13 @@ def summarization():
                 if os.path.exists(path):
                     with open(path,'r',encoding='utf-8') as f:
                         file_text=f.read()
-                        preprocessed_sentences,tokenized_sentences,index_map=preprocessor(file_text)
+                        preprocessed_sentences,tokenized_sentences,index_map,tokenized_words,word_index_map=preprocessor(file_text)
                 # tf,isf,tf_idf=compute_tf_idf(preprocessed_sentences)
                 tf_idf=compute_tf_idf(preprocessed_sentences)
                 tf_idf_array=tf_idf.to_numpy()
                 U,S,Vt=calc_svd(tf_idf_array)
                 summary=cross(U,tokenized_sentences,summary_length,index_map)
+                words=cross_words(Vt,tokenized_words,word_index_map)
                 # sentence_rank=calc_sentence_score(U,tokenized_sentences)
                 # calc_rank(sentence_rank,tokenized_sentences,summary_length)
                 # tf,isf,tf_idf=tf.to_html(classes='table table-striped'),isf.to_html(classes='table table-striped',index=False),tf_idf.to_html(classes='table table-striped')
@@ -124,7 +127,7 @@ def summarization():
                         os.remove(os.path.join('./uploads',dir))
 
                 # return render_template('summarization.html',U=U,S=S,Vt=Vt)  
-                return render_template('summarization.html',summary=summary)
+                return render_template('summarization.html',summary=summary,words=words)
 
             else:
                   return render_template('summarization.html',summary="Neither file Nor text input has been given .Go back!")

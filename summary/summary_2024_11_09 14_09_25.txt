@@ -1,7 +1,0 @@
-To avoid this happening, each number is only distributed to the largest divisible digit in [2, 9] except the non-divisible numbers.
-Feel free to do your own research where necessary with proper referencing.
-3  Structure Refer to the rubric at the end for details of mark distribution.
-How do I submit?
-So, I would like the teacher to explain more on xxxx aspects of the feedback or I would like an opportunity to have a dialogue to understand the feedback) 
-
-4   Some Helpful Websites and Resources Listed in CANVAS Who can help me?

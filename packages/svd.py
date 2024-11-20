@@ -11,7 +11,7 @@ def calc_svd(A):
     eigen_vectors_U=np.real(eigen_vectors_U)
     # print("\n U ",eigen_vectors_U)
     eigen_values_V, eigen_vectors_V = np.linalg.eig(np.dot(A.T, A)) # gives V
-    # Sorting eigen_values_V and eigen_vectors_V in descending order of eigen_values_U
+    # Sorting eigen_values_V and eigen_vectors_V in descending order of eigen_values_V
     eigen_values_V=np.real(eigen_values_V)
     eigen_vectors_V=np.real(eigen_vectors_V)
     idx = eigen_values_V.argsort()[::-1]   
@@ -23,4 +23,6 @@ def calc_svd(A):
     Sigma=np.zeros((m,n))
     np.fill_diagonal(Sigma,singular_values)
     # print(" \n Sigma \n",Sigma)
+    u,s,vt=np.linalg.svd(A)
+    # print(vt)
     return eigen_vectors_U,Sigma,eigen_vectors_V.T
