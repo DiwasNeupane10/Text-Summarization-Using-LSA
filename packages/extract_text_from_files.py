@@ -31,12 +31,12 @@ def extract_text(file):
                         #and if it is false return false
                         flag=not flag
                 if flag:
-                    return flag
+                    return flag,path
                 else :
                     #if empty remove the original uploaded and extracted text file
                     os.remove(path)
                     os.remove(os.path.join('./uploads',file.filename))
-                    return flag
+                    return flag,"Null"
 
             except Exception as e:
                 raise ValueError("Text extraction Failed") from e
@@ -60,12 +60,12 @@ def extract_text(file):
                     if  not bool(content):
                         flag=not flag
                 if flag:
-                    return flag
+                    return flag,path
                 
                 else:
                     os.remove(path)
                     os.remove(os.path.join('./uploads',file.filename))
-                    return flag
+                    return flag,"Fail"
                     
             except Exception as e:
                 raise ValueError("Text Extraction Failed") from e
@@ -77,11 +77,12 @@ def extract_text(file):
                 with open(open_path,'r',encoding='utf-8') as f:
                     content=f.read().strip()
                     if  not bool(content):
-                        return not flag
+                        return not flag,"fail"
                  #for text files if there is content in it then change its directory straight to extracted folder   
                 current_date_time=get_date_time()
-                os.rename(open_path, os.path.join('./extraction',filename.rsplit('.',1)[0]+'_'+current_date_time+'.txt'))
-                return flag
+                new_path=os.path.join('./extraction',filename.rsplit('.',1)[0]+'_'+current_date_time+'.txt')
+                os.rename(open_path,new_path)
+                return flag,new_path
             except Exception as e:
                 raise ValueError("Text Extraction Failed") from e
             

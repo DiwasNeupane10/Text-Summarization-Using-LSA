@@ -10,54 +10,54 @@ def preprocessing_U_matrix(U):
         avg_col_vector = np.mean(col_vector)  # Calculate the mean of this column
         col_vector = np.where(col_vector < avg_col_vector, 0, col_vector)  # Set elements < mean to 0
         U[:, i] = col_vector 
-    # print(U)
+    # print(U.shape[0])
     return U
 
 
-def calc_sentence_length(preprocessed_U,tokenized_sentences):
-   sentence_scores=[calc_l2_norm(preprocessed_U[i]) for i in range(preprocessed_U.shape[0])]#stores the l2 norm of sentences 
-#    dict={}
-#    for i,score in enumerate(sentence_scores):
-#        dict[tokenized_sentences[i]]=float(score)
-#    print(dict)    
-   return sentence_scores
+def calc_sentence_length(preprocessed_U,preprocessed_sentences):
+    sentence_scores=[calc_l2_norm(preprocessed_U[i]) for i in range(preprocessed_U.shape[0])]#stores the l2 norm of sentences 
+    # listt=[]
+    # for i,ps in enumerate(preprocessed_sentences):
+    #     listt.append([ps,sentence_scores[i]])
+    return [[ps,sentence_score]for ps,sentence_score in zip(preprocessed_sentences,sentence_scores)]
 
 def calc_l2_norm(row_vector):
     return np.sqrt(np.sum(np.square(row_vector)))#calulates the l2 norm of each sentence
 
-def calc_rank(sentence_scores,tokenized_sentences,index_map):
-    idx=np.argsort(sentence_scores)[::-1]#stores the indices of how the sentence scores should be sorted in descending order
-    ranked_original_indices=[index_map[i]for i in idx]#index map stores the indices of the preprocessed sentence 
-    #get the indices of the sentence in the original sentences 
-    # ranked_sentences=[tokenized_sentences[i] for i in idx]
-    ranked_sentences=[tokenized_sentences[i]for i in ranked_original_indices]
-    # print("-"*100)
-    # for sent in ranked_sentences:
-        # print("\n",sent)
-    return ranked_sentences
+def calc_rank(tokenized_sentences,index_map,listt):
+    for li,index in zip(listt,index_map):
+        li[0]=tokenized_sentences[index]
+    scores=[li[1] for li in listt]
+    sentences=[li[0]for li in listt]
+    idxx=np.argsort(scores)[::-1]
+    ranked_sent=[sentences[i] for i in idxx]
+    # print(ranked_sent)
+    
+    ranked_scores=sorted(scores,reverse=True)
+    # summary_data=[(sent,score)for sent,score in zip(ranked_sent,score) ]
+
+    return ranked_sent,ranked_scores
 
 
 
 
-def return_ordered(summary,tokenized_sentences):   
-    dict={}
-    for i,sentence in enumerate(summary):
-        dict[sentence]=tokenized_sentences.index(sentence)#stores the indices of the summary so that the sentences that come first should also come first in the summary
-    # print(dict)
-    indices=sorted(list(dict.values()))#this sorts the indices 
-    # print(indices)
-    return [tokenized_sentences[i] for i in indices]
 
-def cross(U,tokenized_sentences,summary_length,index_map):
+def return_ordered(summary_data,tokenized_sentences):   
+    ordered_summary=sorted(summary_data,key=lambda x:tokenized_sentences.index(x[0]))
+    return ordered_summary
+
+def cross(U,tokenized_sentences,summary_length,index_map,preprocessed_sentences):
     preprocessed_U=preprocessing_U_matrix(U)
-    sentence_score=calc_sentence_length(preprocessed_U,tokenized_sentences)
-    ranked_sentences=calc_rank(sentence_score,tokenized_sentences,index_map)
+    listt=calc_sentence_length(preprocessed_U,preprocessed_sentences)
+    ranked_sentences,ranked_scores=calc_rank(tokenized_sentences,index_map,listt)
     summary=[ranked_sentences[i]for i in range(int(summary_length))]
-    ordered_summary=return_ordered(summary,tokenized_sentences)
-    # print(summary)
-    # print("--"*80)
+    summary_score=[ranked_scores[i]for i in range(int(summary_length))]
+    # print("----"*50)
+    # print(f'{len(summary_score)}{summary_score}')
+    summary_data=[(sentence,score)for sentence,score in zip(summary,summary_score)]
+    ordered_summary=return_ordered(summary_data,tokenized_sentences)
+    # print("----"*50)
     # print(ordered_summary)
-    # return summary
     return ordered_summary
 
 

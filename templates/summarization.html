@@ -16,33 +16,21 @@
         <div class="row justify-content-center">
             <div class="col-12 col-md-8 col-lg-6 text-center">
                  <div class="gen_summary  border border-1 s-card" style="padding: 10px;word-wrap: break-word;">
-                    {% for sent in summary %}
-                        {{sent}}
+                    {% for sent in summary_data %}
+                    <span data-toggle="tooltip" data-html="true" data-placement="top" title="{{sent[1]}}">
+                        {{sent[0]}}
+                    </span>
                     {% endfor %}
-                <!-- </div>
-                <div class="table-responsive border">
-                    <caption>TF</caption>
-                    {{table1|safe}}
-                </div>
-                <div class="table-responsive border">
-                    <caption>IDF</caption>
-                    {{table2|safe}}
-                </div>
-                <div class="table-responsive border">
-                    <caption>TF-IDF</caption>
-                    {{table3|safe}}
-                </div> -->
-              <!-- {{U}}<br>{{S}}<br>{{Vt}}<br>{{sh}} -->
               
             </div>
-            <div class="row justify-content-center">
+            <!-- <div class="row justify-content-center">
 
                 <div class="words  border border-1 s-card" style="padding: 10px;word-wrap: break-word;">
                     {%for word in words %}
                         {{word}}
                     {% endfor %}
                 </div>
-            </div>
+            </div> -->
         </div>
         <div class="row justify-content-center">
             <div class="col-12 col-md-8 col-lg-6 text-center">
@@ -58,6 +46,14 @@
             </div>        
         </div>
     </div>
-        
+
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+    </script>
 </html>

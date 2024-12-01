@@ -75,3 +75,9 @@
     box-shadow: 0 0.5rem 1rem rgba(255, 105, 180, 0.3);
     padding: 1.25rem;   
 }
+
+.flashed_message{
+    color: red;
+    font-weight: bold;
+
+}
