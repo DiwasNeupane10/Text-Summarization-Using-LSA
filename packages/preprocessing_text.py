@@ -23,19 +23,9 @@ def preprocessor_for_sentence(sent):
     return ' '.join(lematized_words),lematized_words
 
 
-# def preprocessor(text):
-#     tokenized_sentence=sent_tokenize(text)
-#     preprocessed_sentences=[preprocessor_for_sentence(sent) for sent in tokenized_sentence]
-#         # print(preprocessed_sentences)
-#         # print(tokenized_sentence)
-#     return preprocessed_sentences,tokenized_sentence
 
 def preprocessor(text):
     tokenized_sentence=sent_tokenize(text)
-    # for i,ts in enumerate(tokenized_sentence):
-        # print(f'tokenized sentence at index{i}: {ts}' )
-        # print("XX")
-    # print("----"*50)
     preprocessed_sentences=[]
     tokenized_words=[]
     index_map=[]
@@ -44,19 +34,12 @@ def preprocessor(text):
     for i,sent in enumerate(tokenized_sentence):
         preprocessed_sentence,list_words=preprocessor_for_sentence(sent)
         if preprocessed_sentence and preprocessed_sentence!=" ":
-            # print(f"preprocessed sentence at index {i}:{preprocessed_sentence}")
-            # print("XX")
             preprocessed_sentences.append(preprocessed_sentence)
             index_map.append(i)
-            # print(list_words)
+   
             for word in list_words:
                 tokenized_words.append(word)
                 word_index_map.append(word_position)
                 word_position+=1
-    # print(tokenized_words)
-           
-    # print("tokenized_Sentences",len(tokenized_sentence))        
-    # print("preprocessed_Sentences",preprocessed_sentences)
-
-    # print(index_map)
+ 
     return preprocessed_sentences,tokenized_sentence,index_map,tokenized_words,word_index_map

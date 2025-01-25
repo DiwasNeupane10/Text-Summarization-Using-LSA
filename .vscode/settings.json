@@ -1,4 +1,7 @@
 {
     "workbench.colorCustomizations": {
+    },
+    "files.associations": {
+        "D0741.M.250.I.C": "cpp"
     }
 }

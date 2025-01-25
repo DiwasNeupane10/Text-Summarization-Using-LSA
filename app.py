@@ -71,7 +71,14 @@ def summarization():
         if input_type=='textarea':
             user_text=request.form['text_area']#get the text from the textarea with name text_area
             preprocessed_sentences,tokenized_sentences,index_map,tokenized_words,word_index_map=preprocessor(user_text)
-            if len(preprocessed_sentences)<=summary_length:
+            # for sent in tokenized_sentences:
+            #     print(sent)
+            #     print("XXXX\n")
+            if not preprocessed_sentences:
+                flash("Error:Input format is incorrect")
+                return redirect(url_for("index"))
+            
+            elif len(preprocessed_sentences)<=summary_length:
                 flash("Error:Input text must be longer than the summary length")
                 return redirect(url_for("index"))
             tf_idf=compute_tf_idf(preprocessed_sentences)
@@ -79,6 +86,7 @@ def summarization():
             U,S,Vt=calc_svd(tf_idf_array)
             summary=cross(U,tokenized_sentences,summary_length,index_map,preprocessed_sentences)
             # words=cross_words(Vt,tokenized_words,word_index_map)
+    
             current_date=get_date_time()
             path=os.path.join('./summary',f'summary_{current_date}.txt')
             with open(path,'w',encoding='utf-8') as f:
@@ -97,7 +105,10 @@ def summarization():
             with open(session['path'],'r',encoding='utf-8') as f:
                 file_text=f.read()
             preprocessed_sentences,tokenized_sentences,index_map,tokenized_words,word_index_map=preprocessor(file_text)
-            if len(preprocessed_sentences)<=summary_length:
+            if not preprocessed_sentences:
+                flash("Error:Incorrect input format")
+                return redirect(url_for("index"))
+            elif len(preprocessed_sentences)<=summary_length:
                 flash("Error:Input sentences  must be more than the summary length")
                 return redirect(url_for("handle_files"))
             tf_idf=compute_tf_idf(preprocessed_sentences)
@@ -105,6 +116,7 @@ def summarization():
             U,S,Vt=calc_svd(tf_idf_array)
             summary=cross(U,tokenized_sentences,summary_length,index_map,preprocessed_sentences)
             # words=cross_words(Vt,tokenized_words,word_index_map)
+          
             current_date=get_date_time()
             path=os.path.join('./summary',f'summary_{current_date}.txt')
             with open(path,'w',encoding='utf-8') as f:
@@ -144,5 +156,45 @@ def handle_download():
         dir.remove('.gitkeep')
         return send_from_directory('./summary',dir[0],as_attachment=True)
     
+@app.route("/summary_api",methods=["POST"])
+def summarization_api():
+    if not request.is_json:
+        return jsonify({"error": "Invalid input, JSON expected"})
+    data=request.get_json()
+    expected_types={
+        'summary_length':int,
+        'text':str
+    }
+    errors=validate_json(data,expected_types)
+    if errors:
+        return jsonify({"errors":errors})
+    for key in data.keys():
+        if key=='summary_length':
+            length=int(data['summary_length'])
+        elif key=='text':
+            text=data['text']
+    preprocessed_sentences,tokenized_sentences,index_map,tokenized_words,word_index_map=preprocessor(text)
+    if not preprocessed_sentences:
+        return jsonify({"error":"Incorrect Input Format"})
+    elif len(preprocessed_sentences)< length:
+        return jsonify({"error":"Summary length should be less than input length"})
+    tf_idf=compute_tf_idf(preprocessed_sentences)
+    tf_idf_array=tf_idf.to_numpy()
+    U,S,Vt=calc_svd(tf_idf_array)
+    summary=cross(U,tokenized_sentences,length,index_map,preprocessed_sentences)
+    summarized_sentences=[str(sent[0]).replace("\n","").replace("\r","") for sent in summary]
+    scores=[sent[1]for sent in summary]
+    return jsonify({"summary":summarized_sentences,"scores":scores})
+
+def validate_json(data, expected_types):
+    errors = []
+    for key, expected_type in expected_types.items():
+        if key not in data:
+            errors.append(f"Missing field: {key}")
+        elif not isinstance(data[key], expected_type):
+            errors.append(f"Incorrect type for field '{key}': expected {expected_type.__name__}, got {type(data[key]).__name__}")
+    return errors
+
+
 if __name__ == '__main__':
     app.run(debug=True)
