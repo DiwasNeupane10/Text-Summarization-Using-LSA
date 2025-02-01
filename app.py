@@ -71,9 +71,7 @@ def summarization():
         if input_type=='textarea':
             user_text=request.form['text_area']#get the text from the textarea with name text_area
             preprocessed_sentences,tokenized_sentences,index_map,tokenized_words,word_index_map=preprocessor(user_text)
-            # for sent in tokenized_sentences:
-            #     print(sent)
-            #     print("XXXX\n")
+           
             if not preprocessed_sentences:
                 flash("Error:Input format is incorrect")
                 return redirect(url_for("index"))
@@ -81,6 +79,7 @@ def summarization():
             elif len(preprocessed_sentences)<=summary_length:
                 flash("Error:Input text must be longer than the summary length")
                 return redirect(url_for("index"))
+            
             tf_idf=compute_tf_idf(preprocessed_sentences)
             tf_idf_array=tf_idf.to_numpy()
             U,S,Vt=calc_svd(tf_idf_array)
@@ -93,7 +92,7 @@ def summarization():
                 for sent in summary:
                     f.write(sent[0])
                     f.write("\n")
-            
+
             session['score_data']={'score':[sent[1]for sent in summary]}
             session['s_path']=path
             return redirect(url_for("summarization"))
@@ -102,6 +101,7 @@ def summarization():
             if 'path' not in session or not os.path.exists(session['path']):
                 flash("Error Upload File Again")
                 return redirect(url_for("handle_files"))
+            
             with open(session['path'],'r',encoding='utf-8') as f:
                 file_text=f.read()
             preprocessed_sentences,tokenized_sentences,index_map,tokenized_words,word_index_map=preprocessor(file_text)
@@ -133,12 +133,14 @@ def summarization():
         if not 's_path' in session:
             flash("Error: No summary data")
             return redirect(url_for("index"))
+        
         with open(session['s_path'],'r',encoding='utf-8') as f:
             display_summary=[line.replace("\n","")for line in f.readlines() if line.strip()]
-            # print(display_summary)s
+        
         if not display_summary :
             flash("Error: No summary data")
             return redirect(url_for("index"))
+        
         display_score=session.get('score_data')
         display_score=list(display_score.values())[0]
         summary_data=[(d_summary,d_score)for d_summary,d_score in  zip(display_summary,display_score)]
@@ -149,7 +151,7 @@ def summarization():
 
 @app.route("/download_file",methods=['GET','POST'])
 def handle_download():
-    if request.method !="GET":
+    if request.method =="GET":
         return redirect("/")
     else:
         dir=os.listdir("./summary")

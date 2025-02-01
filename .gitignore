@@ -1,2 +1,5 @@
 venv/
 flask_session/
+_pycache_/
+.pytest_cache/
+tests/

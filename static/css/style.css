@@ -81,3 +81,20 @@
     font-weight: bold;
 
 }
+.about{
+    box-shadow: 0 0.5rem 1rem rgba(255, 99, 71, 0.3) ;
+    padding: 1.25rem;   
+    height: 100px;
+    margin-top: 10px;
+}
+.image-container img {
+    width: 100%;  /* Ensures images fill the column */
+    height: auto;
+    max-height: 300px; /* Adjust this as needed */
+    object-fit:cover; /* Keeps images visually appealing */    
+}
+
+.row{
+    padding:2px;
+    margin: 5px;
+}

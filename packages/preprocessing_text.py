@@ -41,5 +41,5 @@ def preprocessor(text):
                 tokenized_words.append(word)
                 word_index_map.append(word_position)
                 word_position+=1
- 
+    print(preprocessed_sentences)
     return preprocessed_sentences,tokenized_sentence,index_map,tokenized_words,word_index_map
