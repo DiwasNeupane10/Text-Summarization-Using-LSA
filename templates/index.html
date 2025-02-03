@@ -1,107 +1,263 @@
-{% extends 'base.html' %} {% block title %} Text Summarizer {% endblock %} {%
-block body %}
-<div class="container mt-4 textarea">
-  <form
-    method="post"
-    id="myform"
-    enctype="multipart/form-data"
-    action="{{url_for('summarization')}}"
-  >
-    <h1 class="mb-3 text-center">
-      Summarize my text in
-      <input
-        type="number"
-        style="width: 60px"
-        value="5"
-        min="1"
-        class="form-control d-inline-block"
-        name="length"
-      />
-      sentences.
-    </h1>
-    <div class="row justify-content-center text-center">
-      {% with messages=get_flashed_messages() %} {% if messages %} {% for
-      message in messages %}
-      <p class="flashed_message">{{message}}</p>
-      {% endfor %} {% endif %} {% endwith %}
-    </div>
-    <div class="card">
-      <div class="card-body">
-        <div class="mb-3">
-          <input type="hidden" name="input_type" value="textarea" />
-          <textarea
-            required
-            class="form-control"
-            rows="6"
-            name="text_area"
-            placeholder="Our Text Summarizer summarizes text to save you time. Paste an article, text or essay in this box and hit summarize. You can also summarize PDF and docx documents by uploading a file"
-          ></textarea>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Text Summarizer</title>
+  <!-- Add your CSS files or Bootstrap CDN here -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Add any custom CSS files here -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  {% extends 'base.html' %} 
+  {% block title %} Text Summarizer {% endblock %} 
+  {% block body %}
+  <div class="container mt-4 textarea">
+    <form method="post" id="myform" enctype="multipart/form-data" action="{{url_for('summarization')}}">
+      <h1 class="mb-3 text-center">
+        Summarize my text in
+        <input type="number" style="width: 60px" value="5" min="1" class="form-control d-inline-block" name="length" />
+        sentences.
+      </h1>
+      <div class="row justify-content-center text-center">
+        {% with messages=get_flashed_messages() %} 
+          {% if messages %} 
+            {% for message in messages %}
+              <p class="flashed_message">{{message}}</p>
+            {% endfor %} 
+          {% endif %} 
+        {% endwith %}
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <div class="mb-3">
+            <input type="hidden" name="input_type" value="textarea" />
+            <textarea required class="form-control" rows="6" name="text_area" placeholder="Our Text Summarizer summarizes text to save you time. Paste an article, text or essay in this box and hit summarize. You can also summarize PDF and docx documents by uploading a file"></textarea>
+          </div>
+          <div class="d-flex flex-column flex-md-row justify-content-center gap-2">
+            <a class="btn btn-outline-secondary btn-yellow mx-3" href="{{ url_for('handle_files')}}">FOR FILE UPLOAD</a>
+            <button class="btn btn-pink mx-3" type="submit" name="summarize" value="summarize">SUMMARIZE</button>
+          </div>
         </div>
-        <div
-          class="d-flex flex-column flex-md-row justify-content-center gap-2"
-        >
-          <a
-            class="btn btn-outline-secondary btn-yellow mx-3"
-            href="{{ url_for('handle_files')}}"
-            >FOR FILE UPLOAD</a
-          >
-          <button
-            class="btn btn-pink mx-3"
-            type="submit"
-            name="summarize"
-            value="summarize"
-          >
-            SUMMARIZE
-          </button>
+      </div>
+    </form>
+  </div>
+
+  {% block support %}
+  <div class="container mt-5">
+    <!-- About Section -->
+    <div class="row">
+      <div class="col-12">
+        <div class="about text-center">
+          <h2>About</h2>
+          <p>
+            Text summarization systems extract brief information from a given document. By using the summary
+            produced, a user can decide if a document is related to their needs without reading the whole document.
+          </p>
+          <p>
+            Latent Semantic Analysis is an algebraic-statistical method that extracts hidden semantic structures
+            of words and sentences. It is an unsupervised approach that does not need any training or external
+            knowledge.
+          </p>
         </div>
       </div>
     </div>
-  </form>
-</div>
-{% block support %}
-<div class="container mt-4">
-    <div class="container-fluid about text-center" > <h2 class="text-center">
-        About
-    </h2></div>
-   
-    <p class="text-center mt-2">Text summarization systems extract brief information from a given document. By using the summary
-        produced, a user can decide if a document is related to his/her needs without reading the whole document. Latent Semantic Analysis is an algebraic-statistical method that extracts hidden semantic structures of words and sen
-        tences. It is an unsupervised approach that does not need any training or external knowledge. LSA uses the context of
-         the input document and extracts information such as which words are used together and which common words are seen
-         in different sentences.</p>
+  
+    <!-- Image Cards Section -->
+    <div class="row">
+      <!-- Card 1 -->
+      <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card" data-bs-toggle="modal" data-bs-target="#cardModal1">
+          <img src="./static/images/extraction.png" class="card-img-top" alt="Extraction">
+          <div class="card-body">
+            <h5 class="card-title">Extraction</h5>
+            <p class="card-text">Extraction techniques retrieve key sentences from the original text.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card" data-bs-toggle="modal" data-bs-target="#cardModal2">
+          <img src="./static/images/tf-idf.png" class="card-img-top" alt="TF-IDF">
+          <div class="card-body">
+            <h5 class="card-title">TF-IDF</h5>
+            <p class="card-text">TF-IDF calculates the importance of words in a document based on frequency.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card" data-bs-toggle="modal" data-bs-target="#cardModal3">
+          <img src="./static/images/scd.png" class="card-img-top" alt="SVD">
+          <div class="card-body">
+            <h5 class="card-title">SVD</h5>
+            <p class="card-text">Singular Value Decomposition (SVD) helps in dimensionality reduction and topic modeling.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card" data-bs-toggle="modal" data-bs-target="#cardModal4">
+          <img src="./static/images/summ.png" class="card-img-top" alt="Summarization">
+          <div class="card-body">
+            <h5 class="card-title">Summarization</h5>
+            <p class="card-text">Text summarization condenses information while preserving meaning.</p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="container text-center">
-    <div class="row">
-        <div class="col-md-6 col-6 image-container">
-            <img src="./static/images/extraction.png" class="img-fluid" alt="Extraction">
-        </div>
-        <div class="col-md-6 col-6 image-container">
-            <img src="./static/images/tf-idf.png" class="img-fluid" alt="TF-IDF">
-        </div>
+
+  <!-- Modal for Card 1 -->
+<div class="modal fade" id="cardModal1" tabindex="-1" aria-labelledby="cardModalLabel1" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="cardModalLabel1">Extraction</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <img src="./static/images/extraction.png" class="img-fluid mb-3" alt="Extraction">
+        <p>Extraction techniques retrieve key sentences from the original text. These techniques can involve algorithms that analyze document structure, such as sentence importance, or more sophisticated approaches using natural language processing (NLP) to extract relevant concepts and facts.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
     </div>
-    <div class="row">
-        <div class="col-md-6 col-6 image-container">
-            <img src="./static/images/scd.png" class="img-fluid" alt="SVD">
-        </div>
-        <div class="col-md-6 col-6 image-container">
-            <img src="./static/images/summ.png" class="img-fluid" alt="Summ">
-        </div>
+  </div>
+</div>
+
+<!-- Modal for Card 2 -->
+<div class="modal fade" id="cardModal2" tabindex="-1" aria-labelledby="cardModalLabel2" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="cardModalLabel2">TF-IDF</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <img src="./static/images/tf-idf.png" class="img-fluid mb-3" alt="TF-IDF">
+        <p>TF-IDF calculates the importance of words in a document based on their frequency. It helps identify terms that are most relevant to a document, making it a crucial technique for information retrieval, document clustering, and text mining.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
     </div>
+  </div>
+</div>
+
+<!-- Modal for Card 3 -->
+<div class="modal fade" id="cardModal3" tabindex="-1" aria-labelledby="cardModalLabel3" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="cardModalLabel3">SVD</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <img src="./static/images/scd.png" class="img-fluid mb-3" alt="SVD">
+        <p>Singular Value Decomposition (SVD) is a technique in linear algebra used for dimensionality reduction, especially in large datasets. It is also applied in topic modeling and matrix factorization for collaborative filtering in recommendation systems.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
     </div>
+  </div>
+</div>
 
-{% endblock %}
+<!-- Modal for Card 4 -->
+<div class="modal fade" id="cardModal4" tabindex="-1" aria-labelledby="cardModalLabel4" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="cardModalLabel4">Summarization</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <img src="./static/images/summ.png" class="img-fluid mb-3" alt="Summarization">
+        <p>Text summarization condenses information while preserving its meaning. Techniques like extractive and abstractive summarization are used to generate concise versions of lengthy documents, making them more accessible for quick understanding.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+  {% endblock %}
+  {% endblock %}
 
-{% endblock %} {% block active %}
-<ul class="navbar-nav me-auto mb-2 mb-lg-0">
-  <li class="nav-item">
-    <a class="nav-link active" aria-current="page" href="{{url_for('index')}}"
-      >Home</a
-    >
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" href="{{url_for('handle_files')}}">File Upload</a>
-  </li>
-</ul>
+  <!-- Contact Section -->
+<section id="contact" class="mt-5 p-4 bg-light rounded">
+  <h2 class="text-center">Contact Us</h2>
+  <p class="text-center">Have any questions? Reach out to us at:</p>
+  <p class="text-center">
+      📧 <strong>Email:</strong> support@textsummarizer.com <br>
+      📞 <strong>Phone:</strong> +1 234 567 890
+  </p>
+</section>
 
-{% endblock %}
+<!-- FAQ Section -->
+<section id="faq" class="mt-5 p-4 bg-white rounded shadow">
+  <h2 class="text-center">Frequently Asked Questions (FAQ)</h2>
+  <div class="accordion" id="faqAccordion">
+      <div class="accordion-item">
+          <h2 class="accordion-header">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                  What is this tool used for?
+              </button>
+          </h2>
+          <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+              <div class="accordion-body">
+                  This tool summarizes long texts using advanced NLP techniques.
+              </div>
+          </div>
+      </div>
 
+      <div class="accordion-item">
+          <h2 class="accordion-header">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                  Is this service free to use?
+              </button>
+          </h2>
+          <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+              <div class="accordion-body">
+                  Yes, the basic features are free. Premium features may be available soon.
+              </div>
+          </div>
+      </div>
+  </div>
+</section>
+
+<!-- Terms of Service Section -->
+<section id="terms" class="mt-5 p-4 bg-light rounded">
+  <h2 class="text-center">Terms of Service</h2>
+  <p class="text-justify">
+      By using this tool, you agree to our terms and conditions. This service is provided as-is, and we are not 
+      responsible for any inaccuracies in summarization results.
+  </p>
+  <p class="text-center">
+      <a href="/terms" class="btn btn-outline-secondary">Read Full Terms</a>
+  </p>
+</section>
+
+  {% block active %}
+  <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+    <li class="nav-item">
+      <a class="nav-link active" aria-current="page" href="{{url_for('index')}}">Home</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="{{url_for('handle_files')}}">File Upload</a>
+    </li>
+  </ul>
+  {% endblock %}
+
+  <!-- Add your JavaScript files or Bootstrap JS CDN here -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Add any custom JavaScript files here -->
+  <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+</body>
+</html>
