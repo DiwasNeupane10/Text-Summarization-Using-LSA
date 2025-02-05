@@ -40,8 +40,8 @@
 <div class="container summ">
   <div class="row justify-content-center">
     <div class="col-12 col-md-10 col-lg-8">
-      <form method="post" id="myform" enctype="multipart/form-data" action="{{url_for('summarization')}}">
-        <h1 class="mt-4 text-center" id="Started">
+      <form method="post" id="myform" enctype="multipart/form-data" action="{{url_for('summarization')}}"onsubmit="loader()">
+        <h1 class="mt-4 text-center" id="Started" >
           Summarize my text in
           <input type="number" style="width: 60px" value="5" min="1" class="form-control d-inline-block" name="length">
           sentences.
@@ -50,7 +50,7 @@
         {% if messages %}
         <div class="row justify-content-center my-3">
           {% for message in messages %}
-          <div class="row justify-content-center my-3">
+          <div class="row justify-content-center my-3 text-center">
             <p class="flashed_message">{{message}}</p>
           </div>
           {% endfor %}
@@ -68,9 +68,11 @@
             <div class="d-flex flex-column flex-md-row justify-content-center gap-2">
               <a class="btn btn-outline-secondary btn-yellow mx-3" href="{{ url_for('handle_files')}}">FOR FILE
                 UPLOAD</a>
-              <button class="btn btn-pink mx-3" type="submit" name="summarize" value="summarize">
+              <button class="btn btn-pink mx-3" type="submit" name="summarize" value="summarize" 
+                id="summarizebutton">
                 SUMMARIZE
               </button>
+
             </div>
           </div>
         </div>
