@@ -10,20 +10,27 @@ from flask import (
     url_for,
     session,
 )
+
 from flask_session import Session
 from werkzeug.utils import secure_filename
-from packages.allowed_file import allowed_files
+# from packages.allowed_file import allowed_files
+from packages.allowed_file import FileVerifier
 from packages.allowed_file import upload_folder
-from packages.extract_text_from_files import extract_text
-from packages.preprocessing_text import preprocessor
-from packages.calc_TF_IDF import compute_tf_idf
-from packages.svd import calc_svd
+# from packages.extract_text_from_files import extract_text
+from packages.extract_text_from_files import TextExtractor
+# from packages.preprocessing_text import preprocessor
+from packages.preprocessing_text import TextPreProcessor
+# from packages.calc_TF_IDF import compute_tf_idf
+from packages.calc_TF_IDF import CustomTFIDF
+# from packages.svd import calc_svd
+from packages.svd import CustomSVD
 from packages.date_time import get_date_time
 
 # from packages.sentence_scoring import calc_sentence_score,calc_rank
-from packages.sentence_scoring import cross
-from packages.word_scoring import cross_words
+# from packages.sentence_scoring import cross
+from packages.sentence_scoring import SentenceSelection
 from packages.clear_directory import clear_dir
+from packages.LSA import LSA
 
 
 app = Flask(__name__)
@@ -42,6 +49,7 @@ def index():
 @app.route("/upload", methods=["POST", "GET"])
 def handle_files():
     if request.method == "POST":
+        file_verifier_object=FileVerifier()
         if "file" not in request.files:
             return jsonify({"error": "No file part in the request"})
 
@@ -53,11 +61,12 @@ def handle_files():
         # if file:
         #     return jsonify({'message':allowed_files(file)})
 
-        elif file and allowed_files(file):
+        elif file and file_verifier_object.check_allowed_files(file):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
             # try:
-            flag, path = extract_text(file)
+            text_extractor_object=TextExtractor()
+            flag, path = text_extractor_object.extract_text(file)
             if flag:
                 session["path"] = path
                 return jsonify(
@@ -81,18 +90,12 @@ def summarization():
     if request.method == "POST":
         input_type = request.form["input_type"]  # get the value of the input
         summary_length = int(request.form["length"])
+        preprocessor_object=TextPreProcessor()
         clear_dir("summary")
         if input_type == "textarea":
-            user_text = request.form[
-                "text_area"
-            ]  # get the text from the textarea with name text_area
-            (
-                preprocessed_sentences,
-                tokenized_sentences,
-                index_map,
-                tokenized_words,
-                word_index_map,
-            ) = preprocessor(user_text)
+            user_text = request.form["text_area"]  # get the text from the textarea with name text_area
+            preprocessed_sentences,tokenized_sentences,index_map= preprocessor_object.preprocessor(user_text)
+            
 
             if not preprocessed_sentences:
                 flash("Error:Input format is incorrect")
@@ -101,19 +104,14 @@ def summarization():
             elif len(preprocessed_sentences) <= summary_length:
                 flash("Error:Input text must be longer than the summary length")
                 return redirect(url_for("index"))
-
-            tf_idf = compute_tf_idf(preprocessed_sentences)
-            tf_idf_array = tf_idf.to_numpy()
-            U, S, Vt = calc_svd(tf_idf_array)
-            summary = cross(
-                U,
-                tokenized_sentences,
-                summary_length,
-                index_map,
-                preprocessed_sentences,
-            )
-            # words=cross_words(Vt,tokenized_words,word_index_map)
-
+            LSA_object=LSA(preprocessed_sentences)
+            U,_,_=LSA_object.process()
+            # tf_idf = compute_tf_idf(preprocessed_sentences)
+            # tf_idf_array = tf_idf.to_numpy()
+            # U,_, _ = calc_svd(tf_idf_array)
+            Sentence_selection_object=SentenceSelection(U,preprocessed_sentences,tokenized_sentences,summary_length, index_map)
+            # summary = cross(U,tokenized_sentences,summary_length,index_map,preprocessed_sentences)
+            summary=Sentence_selection_object.cross(preprocessor_object.sentence_to_indices)
             current_date = get_date_time()
             path = os.path.join("./summary", f"summary_{current_date}.txt")
             with open(path, "w", encoding="utf-8") as f:
@@ -136,27 +134,27 @@ def summarization():
                 preprocessed_sentences,
                 tokenized_sentences,
                 index_map,
-                tokenized_words,
-                word_index_map,
-            ) = preprocessor(file_text)
+            ) = preprocessor_object.preprocessor(file_text)
             if not preprocessed_sentences:
                 flash("Error:Incorrect input format")
                 return redirect(url_for("index"))
             elif len(preprocessed_sentences) <= summary_length:
                 flash("Error:Input sentences  must be more than the summary length")
                 return redirect(url_for("handle_files"))
-            tf_idf = compute_tf_idf(preprocessed_sentences)
-            tf_idf_array = tf_idf.to_numpy()
-            U, S, Vt = calc_svd(tf_idf_array)
-            summary = cross(
-                U,
-                tokenized_sentences,
-                summary_length,
-                index_map,
-                preprocessed_sentences,
-            )
-            # words=cross_words(Vt,tokenized_words,word_index_map)
-
+            LSA_object=LSA(preprocessed_sentences)
+            U,_,_=LSA_object.process()
+            # tf_idf = compute_tf_idf(preprocessed_sentences)
+            # tf_idf_array = tf_idf.to_numpy()
+            # U, S, Vt = calc_svd(tf_idf_array)
+            # summary = cross(
+            #     U,
+            #     tokenized_sentences,
+            #     summary_length,
+            #     index_map,
+            #     preprocessed_sentences,
+            # )
+            Sentence_selection_object=SentenceSelection(U,preprocessed_sentences,tokenized_sentences,summary_length, index_map)
+            summary=Sentence_selection_object.cross(preprocessor_object.sentence_to_indices)
             current_date = get_date_time()
             path = os.path.join("./summary", f"summary_{current_date}.txt")
             with open(path, "w", encoding="utf-8") as f:
@@ -198,6 +196,10 @@ def summarization():
 @app.route("/download_file", methods=["GET", "POST"])
 def handle_download():
     if request.method == "GET":
+
+
+
+
         return redirect("/")
     else:
         dir = os.listdir("./summary")
@@ -209,6 +211,7 @@ def handle_download():
 def summarization_api():
     if not request.is_json:
         return jsonify({"error": "Invalid input, JSON expected"})
+    preprocessor_object=TextPreProcessor()
     data = request.get_json()
     expected_types = {"summary_length": int, "text": str}
     errors = validate_json(data, expected_types)
@@ -216,6 +219,8 @@ def summarization_api():
         return jsonify({"errors": errors})
     for key in data.keys():
         if key == "summary_length":
+        
+        
             length = int(data["summary_length"])
         elif key == "text":
             text = data["text"]
@@ -223,17 +228,19 @@ def summarization_api():
         preprocessed_sentences,
         tokenized_sentences,
         index_map,
-        tokenized_words,
-        word_index_map,
-    ) = preprocessor(text)
+    ) = preprocessor_object.preprocessor(text)
     if not preprocessed_sentences:
         return jsonify({"error": "Incorrect Input Format"})
     elif len(preprocessed_sentences) < length:
         return jsonify({"error": "Summary length should be less than input length"})
-    tf_idf = compute_tf_idf(preprocessed_sentences)
-    tf_idf_array = tf_idf.to_numpy()
-    U, S, Vt = calc_svd(tf_idf_array)
-    summary = cross(U, tokenized_sentences, length, index_map, preprocessed_sentences)
+    # tf_idf = compute_tf_idf(preprocessed_sentences)
+    # tf_idf_array = tf_idf.to_numpy()
+    # U, S, Vt = calc_svd(tf_idf_array)
+    LSA_object=LSA(preprocessed_sentences)
+    U,_,_=LSA_object.process()
+    # summary = cross(U, tokenized_sentences, length, index_map, preprocessed_sentences)
+    Sentence_selection_object=SentenceSelection(U,preprocessed_sentences,tokenized_sentences,length, index_map)
+    summary=Sentence_selection_object.cross(preprocessor_object.sentence_to_indices)
     summarized_sentences = [
         str(sent[0]).replace("\n", "").replace("\r", "") for sent in summary
     ]

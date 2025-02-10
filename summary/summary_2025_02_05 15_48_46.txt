@@ -1,5 +1,0 @@
-LSA:Step 1: StartStep 2: Input Matrix Creation: An input term matrix A is created of size m x n where m is the no of sentences and n is the no of words.
-Each cell is filled with the TF-IDF value of the word.
-TF(t, s) = count of t in s / number of terms in s	IDF(t, s) =log(total no of sentences/no of sentences containing term t)	TF-IDF(t, s)=TF(t, s)*IDF(t, s)Step 3: Singular Value Decomposition: The input matrix created from the previous step is decomposed into three matrices U, ∑, VT	Step 3.1: Calculate eigenvalue and eigenvectors for matrix U using the relation			(A.AT)U=∑2V	Step 3.2: Calculate eigenvalue and eigenvectors for matrix U using the relation			(AT.A)U=∑2VStep 3.3: U and V matrix received from eigenvectors of are rearranged in decreasing order of eigenvalues of U and V respectively, to get U and V respectively in the SVD equation.
-Step 2.2: The cell values less than  average are set to zero.
-Step 3: Calculate the L2 norm for the sentences Step 4: Select the top k sentence for the summaryStep 5: Order the summaryStep 6 : End
