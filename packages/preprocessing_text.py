@@ -54,9 +54,9 @@ class TextPreProcessor:
                 preprocessed_sentences.append(preprocessed_sentence)
                 index_map.append(i)
             
-            if sent in self.sentence_to_indices:
-                self.sentence_to_indices[sent].append(i)
-            else:
+            if sent in self.sentence_to_indices:#if the sentence has already been seen previously
+                self.sentence_to_indices[sent].append(i) #append the next index 
+            else:#otherwise set to the currrent index
                 self.sentence_to_indices[sent] = [i]
 
             

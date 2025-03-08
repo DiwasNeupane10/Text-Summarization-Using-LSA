@@ -13,18 +13,18 @@ function uploadFile() {
         method: 'POST',
         body: formData
     })
-    
-    // fetch is an api that sends request to the route /    
-    
-    .then(response => response.json())
-    .then(data => {
-        if(data.error)
-            alert(data.error);
-        else
-            alert(data.message);    
-       
-    })
-    .catch((error) => {
-        alert('File upload failed!');
-    });
+
+        // fetch is an api that sends request to the route /    
+
+        .then(response => response.json())
+        .then(data => {
+            if (data.error)
+                alert(data.error);
+            else
+                alert(data.message);
+
+        })
+        .catch((error) => {
+            alert('File upload failed!');
+        });
 }

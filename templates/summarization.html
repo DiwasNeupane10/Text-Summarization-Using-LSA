@@ -4,50 +4,23 @@ body %}
   <h1 class="mb-3 text-center">Summary</h1>
   <div class="row justify-content-center">
     <div class="col-12 col-md-8 col-lg-6 text-center">
-      <div
-        class="gen_summary border border-1 s-card"
-        style="padding: 10px; word-wrap: break-word"
-      >
+      <div class="gen_summary border border-1 s-card" style="padding: 10px; word-wrap: break-word">
         {% for sent in summary_data %}
-        <span
-          data-toggle="tooltip"
-          data-html="true"
-          data-placement="top"
-          title="{{sent[1]}}"
-        >
+        <span data-toggle="tooltip" data-html="true" data-placement="top" title="{{sent[1]}}">
           {{sent[0]}}
         </span>
         {% endfor %}
       </div>
-      <!-- <div class="row justify-content-center">
 
-                <div class="words  border border-1 s-card" style="padding: 10px;word-wrap: break-word;">
-                    {%for word in words %}
-                        {{word}}
-                    {% endfor %}
-                </div>
-            </div> -->
     </div>
     <div class="row justify-content-center">
       <div class="col-12 col-md-8 col-lg-6 text-center">
         <div class="mb-3">
-          <a
-            class="btn btn-tomato btn-outline-secondary mx-4 mt-2"
-            href="{{url_for('index')}}"
-            >HOME</a
-          >
-          <a
-            class="btn btn-outline-secondary btn-yellow mx-4 mt-2"
-            href="{{ url_for('handle_files')}}"
-            >FILE UPLOAD</a
-          >
+          <a class="btn btn-tomato btn-outline-secondary mx-4 mt-2" href="{{url_for('index')}}">HOME</a>
+          <a class="btn btn-outline-secondary btn-yellow mx-4 mt-2" href="{{ url_for('handle_files')}}">FILE UPLOAD</a>
         </div>
         <div class="mb-3">
-          <form
-            enctype="multipart/form-data"
-            action="{{url_for('handle_download')}}"
-            method="post"
-          >
+          <form enctype="multipart/form-data" action="{{url_for('handle_download')}}" method="post">
             <button type="submit" name="download" class="btn btn-primary">
               DOWNLOAD
             </button>
@@ -55,6 +28,7 @@ body %}
         </div>
       </div>
     </div>
+
   </div>
   {% endblock %} {% block script %}
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -67,12 +41,7 @@ body %}
   {% endblock %} {% block active %}
   <ul class="navbar-nav me-auto mb-2 mb-lg-0">
     <li class="nav-item">
-      <a
-        class="nav-link active"
-        aria-current="page"
-        href="{{url_for('summarization')}}"
-        >Summarization</a
-      >
+      <a class="nav-link active" aria-current="page" href="{{url_for('summarization')}}">Summarization</a>
     </li>
     <li class="nav-item">
       <a class="nav-link" href="{{url_for('index')}}">Home</a>

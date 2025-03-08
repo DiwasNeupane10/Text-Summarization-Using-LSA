@@ -17,6 +17,7 @@ class CustomTFIDF:
         # return tf,isf,tf_idf.fillna(0)
         # return tf_idf.fillna(0)
         tf_idf=tf_idf.fillna(0)
+        # print(tf_idf.to_numpy())
         return tf_idf.to_numpy()
 
 
@@ -29,6 +30,8 @@ class CustomTFIDF:
             )  # at the index(sentence_no) the total words in that sentence is added.
         return sentence_total_words_dict
 
+    def count_words(self,sent):
+        return len(self.word_split(sent))  # returns the total no of words
 
     def word_split(self,sent):
         words = str(sent).split()  # splits the words of the sentences
@@ -38,8 +41,6 @@ class CustomTFIDF:
         return words
 
 
-    def count_words(self,sent):
-        return len(self.word_split(sent))  # returns the total no of words
 
 
     # function to calculate the total no of occurance of word in a sentence.stored in a nested dictionary
@@ -58,7 +59,7 @@ class CustomTFIDF:
         }
     """
 
-
+        #function to calculate the occurance of words in each sentences
     def count_word_appear_in_sentence(self,no_of_sentences):
         word_occurance_dict = {}
         for i in range(no_of_sentences):  # iterates over the total no of sentences
@@ -78,7 +79,14 @@ class CustomTFIDF:
         # print(word_occurance_dict)
         return word_occurance_dict
 
-
+    '''
+        tf_dict={
+        1:{"word":tf-value,..},
+        .
+        .
+        .
+        }
+    '''
 # function to compute term frequency
     def compute_tf(self,sentence_total_words_dict, word_occurance_dict):
         tf_dict = {}
@@ -96,8 +104,13 @@ class CustomTFIDF:
         fills the NaN vlaues with 0
         we get Nan for word that are not in some sentences .
         Then .T is used to Transpose the Df .
+
+
+
+        
         """
         term_frequency = term_frequency.sort_index(axis=1)
+        # print(term_frequency)
         return term_frequency
 
 
@@ -128,3 +141,5 @@ class CustomTFIDF:
     def return_isf(self,N, St):
         St = int(St)
         return math.log(N / (St))
+    
+

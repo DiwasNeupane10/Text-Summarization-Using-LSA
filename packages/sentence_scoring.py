@@ -62,7 +62,7 @@ class SentenceSelection:
         for the tuples in summary data extract index and sorts accordingly.Meaning the sentences that come first in the
         original sentence will be first
         """
-        # ordered_summary = sorted(summary_data, key=lambda x: self.__tokenized_sentences.index(x[0]))
+    
         ordered_summary = sorted(summary_data, key=lambda x: self.get_original_index(x[0],sentence_to_indices))
     
         return ordered_summary
